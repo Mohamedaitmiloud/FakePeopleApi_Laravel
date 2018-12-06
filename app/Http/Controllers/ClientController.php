@@ -71,7 +71,19 @@ class ClientController extends Controller
   */
     public function update(Request $request, $id)
     {
+        $client = Client::findOrFail($id);
+        $client->name = $request->name;
+        $client->avatar = $request->avatar;
+        $client->age = $request->age;
+        $client->email = $request->email;    
+        $client->number = $request->number;
+        $client->address = $request->address;
+        $client->country = $request->country;
+        $client->notes = $request->notes;
         
+        if ($client->save()) {
+            return new ClientResource($client);
+        }
     }
   /*
   |-------------------------------------------------------------------------------
