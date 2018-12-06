@@ -12,12 +12,7 @@ use Illuminate\Http\Request;
 
 Route::group(['prefix' => 'v1'], function() {
 
-    Route::resource('client', 'ClientController')->except('create','edit','update');
-    
-    Route::put('/client/{id}',[
-        'uses'=>'ClientController@update',
-        'as'=>'client.update'
-    ]);
+    Route::resource('clients', 'ClientController')->except('create','edit');
     
 });
 

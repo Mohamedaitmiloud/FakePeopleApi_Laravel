@@ -4,82 +4,88 @@ namespace App\Http\Controllers;
 
 use App\Client;
 use Illuminate\Http\Request;
+use App\Http\Resources\Client as ClientResource;
+use App\Http\Requests;
 
 class ClientController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+  /*
+  |-------------------------------------------------------------------------------
+  | Get All Clients
+  |-------------------------------------------------------------------------------
+  | URL:            /api/v1/clients
+  | Method:         GET
+  | Description:    Gets all of the clients 
+  */
     public function index()
     {
-        //
+        $clients = Client::paginate(10);
+        return ClientResource::collection($clients);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
+  /*
+  |-------------------------------------------------------------------------------
+  | Store Client
+  |-------------------------------------------------------------------------------
+  | URL:            /api/v1/clients
+  | Method:         POST
+  | Description:    Store a new Client in Database 
+  */
     public function store(Request $request)
     {
-        //
+       $client =  Client::create([
+            'name'=>$request->name,
+            'avatar'=>$request->avatar,
+            'age'=>$request->age,
+            'email'=>$request->email,
+            'number'=>$request->number,
+            'address'=>$request->address,
+            'country'=>$request->country,
+            'notes'=>$request->notes,
+        ]);
+        return new ClientResource($client);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Client  $client
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Client $client)
+  /*
+  |-------------------------------------------------------------------------------
+  | Get client
+  |-------------------------------------------------------------------------------
+  | URL:            /api/v1/clients/{id}
+  | Method:         GET
+  | Description:    Gets one client based on id
+  */
+    public function show($id)
     {
-        //
+        $client = Client::findOrFail($id);
+        return new ClientResource($client);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Client  $client
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Client $client)
-    {
-        //
-    }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Client  $client
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Client $client)
+  /*
+  |-------------------------------------------------------------------------------
+  | Update Client
+  |-------------------------------------------------------------------------------
+  | URL:            /api/v1/clients
+  | Method:         PUT
+  | Description:    Update an existing Client in Database 
+  */
+    public function update(Request $request, $id)
     {
-        //
+        
     }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Client  $client
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Client $client)
+  /*
+  |-------------------------------------------------------------------------------
+  | Delete Client
+  |-------------------------------------------------------------------------------
+  | URL:            /api/v1/clients
+  | Method:         DELETE
+  | Description:    DELETE existing Client 
+  */
+    public function destroy($id)
     {
-        //
+        $client = Client::findOrFail($id);
+        if ($client->delete()) {
+            return new ClientResource($client);
+        }
     }
 }
